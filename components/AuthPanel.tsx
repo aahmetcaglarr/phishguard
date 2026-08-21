@@ -27,7 +27,6 @@ export function AuthPanel({ compact = false }: { compact?: boolean }) {
     cloud,
     signInEmail,
     signUpEmail,
-    signInGoogle,
     signInGuest,
     signInDemo,
     demoAvailable,
@@ -235,22 +234,13 @@ export function AuthPanel({ compact = false }: { compact?: boolean }) {
         <span className="h-px flex-1 bg-line" />
       </div>
 
-      <div className="space-y-2">
-        <button
-          onClick={() => run(signInGoogle)}
-          disabled={busy}
-          className="btn-ghost w-full"
-        >
-          Google ile devam et
-        </button>
-        <button
-          onClick={() => run(signInGuest)}
-          disabled={busy}
-          className="btn-ghost w-full"
-        >
-          Misafir olarak dene
-        </button>
-      </div>
+      <button
+        onClick={() => run(signInGuest)}
+        disabled={busy}
+        className="btn-ghost w-full"
+      >
+        Misafir olarak dene
+      </button>
     </div>
   );
 }
