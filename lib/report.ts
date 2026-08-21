@@ -6,14 +6,13 @@ export interface Breakdown {
   label: string;
   total: number;
   correct: number;
-  accuracy: number; // 0..1
+  accuracy: number;
 }
 
 function accuracy(correct: number, total: number): number {
   return total === 0 ? 0 : correct / total;
 }
 
-/** Kanal (e-posta/SMS/sesli) bazında doğruluk dökümü. */
 export function channelBreakdown(answers: Answer[]): Breakdown[] {
   const channels: Channel[] = ["email", "sms", "voice"];
   return channels
@@ -31,7 +30,6 @@ export function channelBreakdown(answers: Answer[]): Breakdown[] {
     .filter((b) => b.total > 0);
 }
 
-/** Taktik türü bazında doğruluk dökümü (zayıf alan analizi). */
 export function tacticBreakdown(answers: Answer[]): Breakdown[] {
   const map = new Map<Tactic, { total: number; correct: number }>();
   for (const a of answers) {
@@ -53,17 +51,12 @@ export function tacticBreakdown(answers: Answer[]): Breakdown[] {
     .sort((a, b) => a.accuracy - b.accuracy);
 }
 
-/** En zayıf (en çok hata yapılan) taktikler. */
 export function weakestTactics(answers: Answer[], limit = 3): Breakdown[] {
   return tacticBreakdown(answers)
     .filter((b) => b.total >= 1 && b.accuracy < 1)
     .slice(0, limit);
 }
 
-/**
- * Kritik hata türü: kullanıcının bir tehdidi "Güvenli" sandığı durumlar
- * (false negative) en tehlikelisidir.
- */
 export function missedThreats(answers: Answer[]): Answer[] {
   return answers.filter((a) => a.verdict === "phishing" && !a.correct);
 }
@@ -82,7 +75,6 @@ export interface AggregateStats {
   falseAlarm: number;
 }
 
-/** Tüm geçmiş oturumlar üzerinden birleşik istatistik. */
 export function aggregate(history: SessionRecord[]): AggregateStats {
   const answers = history.flatMap((h) => h.answers);
   const totalCorrect = answers.filter((a) => a.correct).length;
@@ -97,7 +89,6 @@ export function aggregate(history: SessionRecord[]): AggregateStats {
   };
 }
 
-/** Doğruluğa göre performans etiketi. */
 export function performanceLabel(acc: number): {
   label: string;
   tone: "brand" | "info" | "warn" | "danger";
@@ -108,7 +99,6 @@ export function performanceLabel(acc: number): {
   return { label: "Riskli", tone: "danger" };
 }
 
-/** Sonuç ekranı için kişiselleştirilmiş öneriler üretir. */
 export function recommendations(answers: Answer[]): string[] {
   const recs: string[] = [];
   const missed = missedThreats(answers);

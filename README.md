@@ -1,148 +1,68 @@
-# 🛡️ PhishGuard — Oltalama (Phishing/Vishing) Farkındalık Simülasyonu
+# PhishGuard
 
-Öğrencilerin ve son kullanıcıların siber güvenlik okuryazarlığını test eden,
-**oyunlaştırılmış** bir web platformu. Ekrana sırayla sahte/gerçek e-postalar,
-SMS'ler ve sesli arama dökümleri gelir; kullanıcı bunların zararlı olup
-olmadığına karar verir. Sistem, hangi saldırı türlerinde daha çok hata
-yapıldığını hem bireysel hem de **sınıf geneli (eğitmen paneli)** raporlar.
+Oltalama (phishing), SMS dolandırıcılığı (smishing) ve telefon dolandırıcılığı
+(vishing) saldırılarına karşı farkındalığı ölçen ve geliştiren, oyunlaştırılmış
+bir web uygulaması. Kullanıcıya sırayla gerçekçi e-posta, SMS ve arama dökümü
+senaryoları sunulur; kullanıcı her birinin zararlı mı yoksa güvenli mi olduğuna
+karar verir. Sistem, hangi saldırı türlerinde daha çok hata yapıldığını hem
+bireysel hem de sınıf düzeyinde raporlar.
 
-> Tüm senaryolar **kurgusaldır** ve yalnızca eğitim amaçlıdır. Gerçek kurum,
-> kişi veya numara temsil etmez. Simülasyondaki tüm bağlantılar devre dışıdır.
+## Özellikler
 
----
+- Üç kanal: e-posta, SMS ve sesli arama senaryoları
+- 42 senaryo; her biri zorluk, taktik ve gerekçelendirilmiş uyarı işaretleriyle
+- Anlık geri bildirim: doğru cevap, kırmızı bayraklar ve kısa açıklama
+- Puan, seri, deneyim puanı ve seviye sistemi
+- Bireysel rapor: kanal ve taktik bazında doğruluk, zayıf yönler, öneriler
+- Eğitmen paneli: sınıf geneli başarı ve en çok hata yapılan saldırı türü
+- E-posta/parola, misafir ve rol bazlı kimlik doğrulama
+- Klavye ile oynanabilirlik ve responsive arayüz
 
-## ✨ Öne Çıkan Özellikler
+## Teknolojiler
 
-- **3 saldırı kanalı** — gerçekçi arayüzlerle E-posta, SMS ve Sesli Arama (vishing).
-- **42 senaryo** — banka, kargo, e-Devlet, GİB, CEO dolandırıcılığı, sahte
-  savcı, teknik destek, kripto/airdrop, hesap ele geçirme, ödül tuzağı ve daha
-  fazlası. Meşru örnekler de içerir (yanlış alarmı ölçmek için).
-- **Kimlik doğrulama & roller** — E-posta/Şifre, Google ve Anonim (misafir)
-  girişi. Öğrenci ve **eğitmen (admin)** rolleri.
-- **Eğitmen paneli** (`/yonetici`) — sınıf geneli doğruluk, **en çok hata
-  yapılan saldırı türü**, kaçırılan tehditler, öğrenci sıralaması ve son oturumlar.
-- **Oyunlaştırma** — puan, hız bonusu, seri (combo) çarpanı, XP ve 8 kademeli
-  seviye sistemi. 4 oyun modu (Hızlı, Standart, Maraton, Odaklı).
-- **Anlık öğretici geri bildirim** — her senaryodan sonra "kırmızı bayraklar"
-  ve güven veren işaretler gerekçeleriyle listelenir.
-- **Bireysel analitik** — kanal ve taktik bazında doğruluk, gözden kaçan
-  tehditler (false negative) ve kişiye özel öneriler.
-- **Erişilebilirlik** — klavye ile oynama (`1`/`2` yanıt, `Enter` ilerle),
-  "içeriğe geç" bağlantısı, görünür odak halkaları, `prefers-reduced-motion`
-  desteği, ARIA etiketleri ve tam responsive (mobil hamburger menü) tasarım.
-- **Marka** — özel favicon ve dinamik Open Graph (sosyal paylaşım) görseli.
+- Next.js 14 (App Router), React, TypeScript
+- Tailwind CSS
+- Firebase Authentication ve Firestore (yapılandırılmadığında `localStorage`
+  ile yerel moda geçer)
 
----
-
-## 🧠 Mimari Kararı: İki Modlu Veri Katmanı
-
-Veri katmanı (`lib/db.ts`) **soyutlanmıştır** ve iki modu şeffaf destekler:
-
-- **Bulut modu** — Firebase ortam değişkenleri tanımlıysa: Firebase Auth +
-  Firestore. İlerleme buluta kaydolur, her cihazdan erişilir, eğitmen paneli
-  gerçek sınıf verisini toplar.
-- **Yerel mod** — anahtarlar yoksa: otomatik olarak `localStorage`.
-
-Bu sayede uygulama **Firebase yapılandırılmadan da eksiksiz çalışır** ve
-production'a sorunsuz deploy edilebilir. Kod tarafı hangi modda olduğunu bilmez;
-yalnızca `loadProfile` / `commitSession` / `loadClassOverview` çağırır.
-
----
-
-## 🧱 Teknoloji Yığını
-
-| Katman        | Teknoloji                              |
-| ------------- | -------------------------------------- |
-| Framework     | **Next.js 14** (App Router)            |
-| Dil           | **TypeScript** (strict)                |
-| Stil          | **Tailwind CSS**                       |
-| Auth & DB     | **Firebase** (Auth + Firestore)        |
-| Fallback      | `localStorage` (soyut veri katmanı)    |
-| Grafikler     | Bağımlılıksız özel SVG bileşenleri     |
-
----
-
-## 🚀 Hızlı Başlangıç
+## Kurulum
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000  (yerel mod, kurulumsuz çalışır)
+npm run dev
 ```
 
-Gerçek veritabanı + eğitmen paneli için Firebase’i yapılandır:
-
-```bash
-cp .env.example .env.local   # Firebase anahtarlarını doldur
-```
-
-Ayrıntılı adımlar (Firebase + Vercel deploy) → **[DEPLOYMENT.md](DEPLOYMENT.md)**.
+Uygulama varsayılan olarak `http://localhost:3000` adresinde çalışır. Firebase
+yapılandırmadan da çalışır; bulut kaydı ve eğitmen paneli için `.env.example`
+dosyasını `.env.local` olarak kopyalayıp Firebase değerlerini girin. Ayrıntılı
+kurulum ve yayınlama adımları için [DEPLOYMENT.md](DEPLOYMENT.md) dosyasına bakın.
 
 Diğer komutlar:
 
 ```bash
-npm run build        # production derlemesi
-npm start            # production sunucusu
-npm run typecheck    # TypeScript kontrolü
-npm run lint         # ESLint
+npm run build      # üretim derlemesi
+npm run typecheck  # tip kontrolü
+npm run lint
 ```
 
----
-
-## 📁 Proje Yapısı
+## Proje yapısı
 
 ```
-app/
-  layout.tsx            # Kök layout + Providers + meta + OG
-  page.tsx              # Ana sayfa (landing)
-  simulasyon/           # Oyun akışı (AuthGate ile korumalı)
-  rapor/                # Kişisel analitik panel (korumalı)
-  yonetici/             # Eğitmen paneli (admin korumalı)
-  rehber/               # Güvenlik rehberi
-  icon.svg              # Favicon
-  opengraph-image.tsx   # Dinamik OG görseli
-components/
-  AuthProvider.tsx      # Kimlik doğrulama context'i (bulut + yerel)
-  AuthPanel.tsx         # Giriş/kayıt/misafir arayüzü
-  AuthGate.tsx          # Korumalı sayfa sarmalayıcı (admin desteği)
-  GameClient.tsx        # Oyun motoru (kurulum → oynama → sonuç) + klavye
-  ScenarioViewer.tsx    # E-posta / SMS / Arama görünümleri
-  FeedbackPanel.tsx     # Cevap sonrası öğretici geri bildirim
-  ResultsScreen.tsx     # Oturum sonu analiz ekranı
-  ReportClient.tsx      # Kişisel kalıcı rapor paneli
-  AdminClient.tsx       # Sınıf geneli eğitmen paneli
-  SiteNav / SiteFooter  # Auth-farkında, responsive gezinme
-  ui.tsx / Icons.tsx    # Paylaşılan UI bileşenleri ve ikonlar
-lib/
-  types.ts              # Alan modeli (senaryo, oturum, kullanıcı, sınıf)
-  scenarios.ts          # 42 senaryoluk veri seti (içeriğin kalbi)
-  tactics.ts            # Taktik & kanal meta verisi
-  game.ts               # Puanlama, seviye, senaryo seçimi
-  report.ts             # Bireysel analitik / öneri motoru
-  firebase.ts           # Firebase başlatma (config guard)
-  db.ts                 # Birleşik veri katmanı (bulut + yerel)
-firestore.rules         # Firestore güvenlik kuralları
-firestore.indexes.json  # Bileşik dizin tanımı
+app/          Sayfalar (ana sayfa, simülasyon, rapor, eğitmen paneli, rehber)
+components/   Arayüz bileşenleri ve oyun akışı
+lib/          Veri modeli, senaryolar, puanlama, analitik ve veri katmanı
 ```
 
----
+## Veri katmanı
 
-## 🔐 Roller
+Depolama katmanı (`lib/db.ts`) soyutlanmıştır. Firebase ortam değişkenleri
+tanımlıysa veriler Firestore'a, tanımlı değilse tarayıcının yerel deposuna
+yazılır. Uygulamanın geri kalanı yalnızca `loadProfile`, `commitSession` ve
+`loadClassOverview` fonksiyonlarını kullanır; bu sayede depolama teknolojisi
+uygulamanın geri kalanından bağımsızdır.
 
-Bir kullanıcı, e-postası `NEXT_PUBLIC_ADMIN_EMAILS` listesindeyse **eğitmen
-(admin)** olur; aksi halde **öğrenci**. Eğitmenler `/yonetici` panelini görür.
-Güvenlik kuralları da aynı e-posta listesini kullanır (bkz. `firestore.rules`).
+## Not
 
----
-
-## 🧩 Yeni Senaryo Eklemek
-
-`lib/scenarios.ts` içindeki `SCENARIOS` dizisine yeni bir `Scenario` nesnesi
-ekle. Kanala göre `email` / `sms` / `voice` alanını doldur; `verdict`,
-`tactics`, `flags`, `explanation`, `takeaway` alanlarını belirt. Senaryo otomatik
-olarak modlara, seçim havuzuna ve tüm analitiğe dahil olur.
-
----
-
-## 📜 Sorumluluk Reddi
-
-Eğitim amaçlı bir demodur. İçerikteki tüm marka, kurum ve senaryolar kurgusaldır.
+Uygulamadaki tüm senaryolar kurgusaldır ve yalnızca eğitim amaçlıdır; gerçek
+kurum, kişi veya numaraları temsil etmez. Senaryolardaki bağlantılar devre
+dışıdır.

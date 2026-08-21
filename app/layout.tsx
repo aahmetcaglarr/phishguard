@@ -5,7 +5,6 @@ import { Providers } from "@/components/Providers";
 import { SiteNav } from "@/components/SiteNav";
 import { SiteFooter } from "@/components/SiteFooter";
 
-// Editöryel serif başlık fontu (yüksek kontrast, karakterli)
 const display = Fraunces({
   subsets: ["latin", "latin-ext"],
   variable: "--font-display",
@@ -13,14 +12,12 @@ const display = Fraunces({
   axes: ["opsz", "SOFT"],
 });
 
-// Sakin, sıcak grotesk gövde fontu
 const sans = Hanken_Grotesk({
   subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
   display: "swap",
 });
 
-// İnceleme detayları (adres, URL, kod) için monospace
 const mono = IBM_Plex_Mono({
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600"],
@@ -30,7 +27,7 @@ const mono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://phishguard-caglar.vercel.app"
   ),
   title: "PhishGuard — Oltalama Farkındalık Simülasyonu",
   description:

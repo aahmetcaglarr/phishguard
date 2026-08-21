@@ -19,7 +19,6 @@ function Slug({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ----------------------------- E-POSTA ----------------------------- */
 function EmailView({ s }: { s: Scenario }) {
   const e = s.email!;
   const initials = e.fromName.trim().slice(0, 1).toUpperCase();
@@ -72,7 +71,6 @@ function EmailView({ s }: { s: Scenario }) {
   );
 }
 
-/* ------------------------------- SMS ------------------------------- */
 function SmsView({ s }: { s: Scenario }) {
   const m = s.sms!;
   return (
@@ -95,7 +93,6 @@ function SmsView({ s }: { s: Scenario }) {
   );
 }
 
-/* --------------------------- SESLİ ARAMA --------------------------- */
 function VoiceView({ s }: { s: Scenario }) {
   const v = s.voice!;
   return (

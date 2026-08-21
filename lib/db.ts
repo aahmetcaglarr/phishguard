@@ -1,9 +1,3 @@
-// ---------------------------------------------------------------------------
-// BİRLEŞİK VERİ KATMANI
-// Firebase yapılandırılmışsa Firestore'a, değilse localStorage'a yazar.
-// Uygulamanın geri kalanı yalnızca bu modülü kullanır (implementasyondan bağımsız).
-// ---------------------------------------------------------------------------
-
 import {
   addDoc,
   collection,
@@ -38,9 +32,6 @@ const EMPTY: Profile = {
   history: [],
 };
 
-/* =========================================================================
- * YEREL (localStorage) IMPLEMENTASYONU
- * ======================================================================= */
 const localKey = (uid: string) => `phishguard.profile.${uid}`;
 
 function localLoad(uid: string): Profile {
@@ -59,9 +50,7 @@ function localSave(uid: string, p: Profile): void {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(localKey(uid), JSON.stringify(p));
-  } catch {
-    /* kota / gizli mod */
-  }
+  } catch {}
 }
 
 function localCommit(uid: string, session: SessionRecord): Profile {
@@ -78,9 +67,6 @@ function localCommit(uid: string, session: SessionRecord): Profile {
   return updated;
 }
 
-/* =========================================================================
- * FIRESTORE IMPLEMENTASYONU
- * ======================================================================= */
 async function cloudLoad(uid: string): Promise<Profile> {
   const fb = getFirebase();
   if (!fb) return { ...EMPTY };
@@ -117,7 +103,7 @@ async function cloudCommit(
   const { db } = fb;
   const xp = xpFromScore(session.score);
 
-  // 1) Kullanıcı özetini işlemsel (transaction) güncelle — bestScore/bestStreak için max gerekir.
+  // User summary needs a transaction because bestScore/bestStreak take a max.
   const userRef = doc(db, "users", user.uid);
   const isNew = await runTransaction(db, async (tx) => {
     const snap = await tx.get(userRef);
@@ -139,7 +125,6 @@ async function cloudCommit(
     return !snap.exists();
   });
 
-  // 2) Oturumu kaydet (kişisel geçmiş + eğitmen listesi için).
   await addDoc(collection(db, "sessions"), {
     ...session,
     xpEarned: xp,
@@ -147,7 +132,8 @@ async function cloudCommit(
     displayName: user.displayName,
   });
 
-  // 3) Sınıf geneli toplamları (aggregates/global) atomik artışlarla güncelle.
+  // Class-wide counters, updated with atomic increments so the dashboard
+  // can be read from a single document.
   const missed = session.answers.filter(
     (a) => a.verdict === "phishing" && !a.correct
   ).length;
@@ -172,14 +158,9 @@ async function cloudCommit(
 }
 
 async function cloudReset(uid: string): Promise<Profile> {
-  // Not: Kişisel geçmiş sunucuda kalır (denetim izi). İstemci tarafında
-  // sıfırlama yalnızca yerel modda tam siler; bulutta özet korunur.
   return cloudLoad(uid);
 }
 
-/* =========================================================================
- * ORTAK ARAYÜZ
- * ======================================================================= */
 export async function loadProfile(user: AppUser): Promise<Profile> {
   return user.cloud ? cloudLoad(user.uid) : localLoad(user.uid);
 }
@@ -197,9 +178,6 @@ export async function resetProfile(user: AppUser): Promise<Profile> {
   return { ...EMPTY };
 }
 
-/* =========================================================================
- * EĞİTMEN PANELİ — SINIF GENELİ İSTATİSTİK
- * ======================================================================= */
 function acc(correct: number, total: number) {
   return total === 0 ? 0 : correct / total;
 }
@@ -210,13 +188,9 @@ async function cloudOverview(): Promise<ClassOverview> {
   try {
     return await cloudOverviewInner(fb.db);
   } catch (e) {
-    // İzin hatası (ör. admin e-postası firestore.rules'a eklenmemiş) veya
-    // eksik dizin durumunda uygulama çökmesin; boş özet dön ve konsola yaz.
-    console.error(
-      "Sınıf verileri okunamadı. Firestore kurallarında admin e-postanızın " +
-        "tanımlı olduğundan ve gerekli dizinin oluşturulduğundan emin olun.",
-      e
-    );
+    // Degrade to an empty overview on a permission or missing-index error
+    // instead of crashing the page.
+    console.error("Sınıf verileri okunamadı.", e);
     return emptyOverview();
   }
 }
@@ -256,7 +230,6 @@ async function cloudOverviewInner(
     .filter((b) => b.total > 0)
     .sort((a, b) => a.accuracy - b.accuracy);
 
-  // Son oturumlar
   const recentSnap = await getDocs(
     query(collection(db, "sessions"), orderBy("finishedAt", "desc"), limit(15))
   );
@@ -271,7 +244,6 @@ async function cloudOverviewInner(
     };
   });
 
-  // En iyi öğrenciler
   const topSnap = await getDocs(
     query(collection(db, "users"), orderBy("totalXp", "desc"), limit(10))
   );
@@ -301,7 +273,6 @@ async function cloudOverviewInner(
   };
 }
 
-/** Yerel modda: yalnızca bu cihazdaki profilden sınıf-benzeri özet üretir (demo). */
 function localOverview(uid: string): ClassOverview {
   const p = localLoad(uid);
   const answers = p.history.flatMap((h) => h.answers);

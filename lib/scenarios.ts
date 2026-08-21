@@ -1,14 +1,9 @@
 import type { Scenario } from "./types";
 
-// ---------------------------------------------------------------------------
-// SENARYO VERİ SETİ
-// Her senaryo gerçek dünyadaki oltalama örneklerinden esinlenerek yazılmıştır.
-// Kurum, kişi ve numaralar tamamen kurgusaldır; eğitim amaçlıdır.
-// bodyHtml içeriği statiktir ve kontrollüdür (kullanıcı girdisi içermez).
-// ---------------------------------------------------------------------------
+// Kurgusal senaryolar; gerçek kurum, kişi veya numara temsil etmez.
 
 export const SCENARIOS: Scenario[] = [
-  // ======================= E-POSTA =======================
+  // E-posta
   {
     id: "eml-01",
     channel: "email",
@@ -532,7 +527,7 @@ export const SCENARIOS: Scenario[] = [
       "Abonelik ödeme sorunlarını yalnızca resmî uygulama/siteye kendiniz giriş yaparak çözün.",
   },
 
-  // ======================= SMS =======================
+  // SMS
   {
     id: "sms-01",
     channel: "sms",
@@ -814,7 +809,7 @@ export const SCENARIOS: Scenario[] = [
       "2FA kodu almak güvenlidir; tehlike yalnızca birinin bu kodu sizden istemesi ve sizin paylaşmanızla başlar.",
   },
 
-  // ======================= SESLİ ARAMA (VISHING) =======================
+  // Sesli arama (vishing)
   {
     id: "vce-01",
     channel: "voice",
@@ -1114,7 +1109,6 @@ export const SCENARIOS: Scenario[] = [
       "Bir ödülü almak için önce para ödemeniz isteniyorsa, bu kesinlikle dolandırıcılıktır.",
   },
 
-  // ================= EK E-POSTA SENARYOLARI =================
   {
     id: "eml-13",
     channel: "email",
@@ -1400,7 +1394,6 @@ export const SCENARIOS: Scenario[] = [
       "Gerçek bir iş sana para kazandırır; işe başlamak için senden ücret veya banka bilgisi isteyen her teklif sahtedir.",
   },
 
-  // ================= EK SMS SENARYOLARI =================
   {
     id: "sms-09",
     channel: "sms",
@@ -1577,7 +1570,6 @@ export const SCENARIOS: Scenario[] = [
       "Link ve bilgi talebi içermeyen, yalnızca duyuru yapan mesajlar genelde güvenlidir.",
   },
 
-  // ================= EK SESLİ ARAMA SENARYOLARI =================
   {
     id: "vce-07",
     channel: "voice",
@@ -1766,7 +1758,6 @@ export const SCENARIOS: Scenario[] = [
   },
 ];
 
-// Yardımcı erişim
 export function getScenarioById(id: string): Scenario | undefined {
   return SCENARIOS.find((s) => s.id === id);
 }

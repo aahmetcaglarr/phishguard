@@ -1,30 +1,18 @@
-// Alan modeli — Oltalama Farkındalık Simülasyonu
-// Bu tipler hem içerik veri setini hem de oyun/rapor durumunu tanımlar.
-
-/** Saldırının geldiği kanal */
 export type Channel = "email" | "sms" | "voice";
-
-/** İçerik gerçekten zararlı mı, yoksa meşru mu? */
 export type Verdict = "phishing" | "legit";
-
-/** Zorluk seviyesi */
 export type Difficulty = "kolay" | "orta" | "zor";
 
-/**
- * Saldırı taktiği kategorisi. Rapor motoru, kullanıcının hangi
- * taktik türlerinde daha çok hata yaptığını bu alana göre çıkarır.
- */
 export type Tactic =
-  | "kimlik-avi" // credential harvesting
-  | "aciliyet" // urgency / scarcity
-  | "sahte-gonderen" // spoofed sender / display name
-  | "odul-tuzagi" // prize / lottery bait
-  | "kurum-taklidi" // brand / institution impersonation
-  | "kotu-baglanti" // malicious link / lookalike domain
-  | "ek-dosya" // malicious attachment
-  | "otorite-baskisi" // authority pressure (CEO fraud, police, tax)
-  | "para-transferi" // payment / wire fraud
-  | "veri-sizintisi"; // data exfiltration / info gathering
+  | "kimlik-avi"
+  | "aciliyet"
+  | "sahte-gonderen"
+  | "odul-tuzagi"
+  | "kurum-taklidi"
+  | "kotu-baglanti"
+  | "ek-dosya"
+  | "otorite-baskisi"
+  | "para-transferi"
+  | "veri-sizintisi";
 
 export interface TacticMeta {
   id: Tactic;
@@ -33,26 +21,23 @@ export interface TacticMeta {
   description: string;
 }
 
-/** Bir e-posta senaryosunun görsel alanları */
 export interface EmailPayload {
   fromName: string;
   fromAddress: string;
   to: string;
   subject: string;
   date: string;
-  bodyHtml: string; // güvenli, kontrollü statik içerik (dangerouslySetInnerHTML)
+  bodyHtml: string;
   hasAttachment?: boolean;
   attachmentName?: string;
 }
 
-/** Bir SMS senaryosunun alanları */
 export interface SmsPayload {
-  sender: string; // gönderen başlığı / numara
+  sender: string;
   timestamp: string;
   message: string;
 }
 
-/** Bir sesli arama (vishing) döküm senaryosu */
 export interface VoicePayload {
   callerId: string;
   callerLabel: string;
@@ -60,44 +45,38 @@ export interface VoicePayload {
   transcript: { speaker: "arayan" | "siz"; text: string }[];
 }
 
-/** Bir "kırmızı bayrak" — bir senaryodaki şüpheli/güven veren ipucu */
 export interface Flag {
   kind: "danger" | "safe";
   label: string;
   detail: string;
 }
 
-/** Tek bir simülasyon senaryosu */
 export interface Scenario {
   id: string;
   channel: Channel;
   verdict: Verdict;
   difficulty: Difficulty;
   tactics: Tactic[];
-  title: string; // rapor/liste için kısa etiket
+  title: string;
   email?: EmailPayload;
   sms?: SmsPayload;
   voice?: VoicePayload;
-  /** Cevap sonrası gösterilen açıklama */
   explanation: string;
   flags: Flag[];
-  /** Kullanıcıya öğretici tek cümlelik ders */
   takeaway: string;
 }
 
-/** Kullanıcının tek bir senaryoya verdiği yanıt */
 export interface Answer {
   scenarioId: string;
   channel: Channel;
   tactics: Tactic[];
-  verdict: Verdict; // doğru cevap
-  guess: Verdict; // kullanıcının tahmini
+  verdict: Verdict;
+  guess: Verdict;
   correct: boolean;
-  msTaken: number; // yanıt süresi
+  msTaken: number;
   pointsEarned: number;
 }
 
-/** Bir tamamlanmış oturumun kaydı */
 export interface SessionRecord {
   id: string;
   startedAt: number;
@@ -106,7 +85,7 @@ export interface SessionRecord {
   answers: Answer[];
   score: number;
   maxStreak: number;
-  accuracy: number; // 0..1
+  accuracy: number;
   xpEarned: number;
 }
 
@@ -117,10 +96,9 @@ export interface GameConfig {
   channels: Channel[];
   difficulties: Difficulty[];
   count: number;
-  timedSeconds: number | null; // her soru için süre (null = süresiz)
+  timedSeconds: number | null;
 }
 
-/** localStorage veya Firestore'da tutulan kalıcı profil */
 export interface Profile {
   totalXp: number;
   sessionsPlayed: number;
@@ -129,9 +107,6 @@ export interface Profile {
   history: SessionRecord[];
 }
 
-// ---------------------------------------------------------------------------
-// Kimlik doğrulama & yetkilendirme
-// ---------------------------------------------------------------------------
 export type Role = "student" | "admin";
 
 export interface AppUser {
@@ -140,13 +115,9 @@ export interface AppUser {
   email: string | null;
   isAnonymous: boolean;
   role: Role;
-  /** true ise Firebase; false ise yerel (localStorage) mod */
   cloud: boolean;
 }
 
-// ---------------------------------------------------------------------------
-// Eğitmen paneli — sınıf geneli istatistikler
-// ---------------------------------------------------------------------------
 export interface ClassBreakdown {
   key: string;
   label: string;

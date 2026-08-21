@@ -32,7 +32,6 @@ export function DifficultyBadge({ difficulty }: { difficulty: Difficulty }) {
   );
 }
 
-/** Dairesel ilerleme halkası (0..1). */
 export function ProgressRing({
   value,
   size = 120,
@@ -86,7 +85,6 @@ export function ProgressRing({
   );
 }
 
-/** Yatay doğruluk çubuğu (rapor bileşeni). */
 export function MeterBar({
   value,
   label,

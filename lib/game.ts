@@ -9,9 +9,6 @@ import type {
 } from "./types";
 import { SCENARIOS } from "./scenarios";
 
-// ---------------------------------------------------------------------------
-// Oyun modları
-// ---------------------------------------------------------------------------
 export const GAME_MODES: Record<
   GameMode,
   {
@@ -57,9 +54,6 @@ export const GAME_MODES: Record<
   },
 };
 
-// ---------------------------------------------------------------------------
-// Puanlama
-// ---------------------------------------------------------------------------
 const BASE_POINTS = 100;
 const DIFFICULTY_BONUS: Record<Difficulty, number> = {
   kolay: 0,
@@ -67,37 +61,27 @@ const DIFFICULTY_BONUS: Record<Difficulty, number> = {
   zor: 60,
 };
 
-/**
- * Bir yanıtın puanını hesaplar.
- * - Yanlış cevap: 0 puan.
- * - Doğru cevap: taban + zorluk bonusu + hız bonusu + seri (combo) çarpanı.
- */
 export function scoreAnswer(params: {
   correct: boolean;
   difficulty: Difficulty;
   msTaken: number;
   timedSeconds: number | null;
-  streak: number; // bu cevaptan ÖNCEKİ ardışık doğru sayısı
+  streak: number;
 }): number {
   const { correct, difficulty, msTaken, timedSeconds, streak } = params;
   if (!correct) return 0;
 
   let pts = BASE_POINTS + DIFFICULTY_BONUS[difficulty];
 
-  // Hız bonusu: süre sınırı varsa ne kadar hızlıysa o kadar çok (0..50).
   if (timedSeconds) {
     const ratioLeft = Math.max(0, 1 - msTaken / (timedSeconds * 1000));
     pts += Math.round(ratioLeft * 50);
   }
 
-  // Seri çarpanı: her ardışık doğru %10 ekler, %100 ile sınırlı.
   const comboMult = 1 + Math.min(streak, 10) * 0.1;
   return Math.round(pts * comboMult);
 }
 
-// ---------------------------------------------------------------------------
-// Seviye / XP
-// ---------------------------------------------------------------------------
 export const LEVELS = [
   { level: 1, title: "Acemi", minXp: 0 },
   { level: 2, title: "Gözlemci", minXp: 300 },
@@ -122,14 +106,10 @@ export function levelForXp(xp: number) {
   return { current, next, progress: Math.max(0, Math.min(1, progress)) };
 }
 
-// XP, oturumdaki toplam puanın %10'u kadar kazanılır.
 export function xpFromScore(score: number): number {
   return Math.round(score * 0.1);
 }
 
-// ---------------------------------------------------------------------------
-// Senaryo seçimi
-// ---------------------------------------------------------------------------
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -153,7 +133,6 @@ export function buildConfig(
   };
 }
 
-/** Konfige uygun, karıştırılmış senaryo listesi üretir. */
 export function pickScenarios(config: GameConfig): Scenario[] {
   const pool = SCENARIOS.filter(
     (s) =>
@@ -169,7 +148,6 @@ export const VERDICT_LABELS: Record<Verdict, string> = {
   legit: "Güvenli",
 };
 
-/** Yanıt kaydı üretir. */
 export function makeAnswer(
   scenario: Scenario,
   guess: Verdict,

@@ -55,7 +55,6 @@ export function GameClient() {
   const [totalXp, setTotalXp] = useState(0);
   const [saving, setSaving] = useState(false);
 
-  // O anki senaryonun cevabı (feedback aşaması)
   const [pending, setPending] = useState<{
     guess: Verdict;
     correct: boolean;
@@ -114,7 +113,6 @@ export function GameClient() {
 
   const next = useCallback(async () => {
     if (isLast) {
-      // oturumu kaydet
       const record: SessionRecord = {
         id: `s-${startedAtRef.current}`,
         startedAt: startedAtRef.current,
@@ -187,7 +185,6 @@ export function GameClient() {
   return null;
 }
 
-/* ============================ KURULUM ============================ */
 function SetupScreen({
   onStart,
 }: {
@@ -333,7 +330,6 @@ function SetupScreen({
   );
 }
 
-/* ============================ OYNAMA ============================ */
 function PlayScreen({
   scenario,
   index,
@@ -360,7 +356,6 @@ function PlayScreen({
   const [timeLeft, setTimeLeft] = useState(timedSeconds ?? 0);
   const progress = ((index + (pending ? 1 : 0)) / total) * 100;
 
-  // Süre sayacı — yalnızca cevap verilmemişken ve süreli modda çalışır
   useEffect(() => {
     if (!timedSeconds || pending) return;
     setTimeLeft(timedSeconds);

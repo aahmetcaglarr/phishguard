@@ -1,7 +1,3 @@
-// Firebase başlatma — yalnızca gerekli ortam değişkenleri tanımlıysa etkinleşir.
-// Anahtarlar yoksa uygulama otomatik olarak "yerel mod"a (localStorage) düşer.
-// Bu sayede uygulama, Firebase yapılandırılmadan da eksiksiz çalışır.
-
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import {
   getAuth,
@@ -18,7 +14,6 @@ const config = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-/** Firebase kullanılabilir mi? (Zorunlu anahtarlar tanımlı mı?) */
 export const isFirebaseEnabled = Boolean(
   config.apiKey && config.authDomain && config.projectId && config.appId
 );
@@ -27,7 +22,6 @@ let _app: FirebaseApp | null = null;
 let _auth: Auth | null = null;
 let _db: Firestore | null = null;
 
-/** Firebase örneklerini (tembel) başlatır. Devre dışıysa null döndürür. */
 export function getFirebase(): {
   app: FirebaseApp;
   auth: Auth;
@@ -42,7 +36,6 @@ export function getFirebase(): {
   return { app: _app!, auth: _auth!, db: _db! };
 }
 
-/** Yönetici (eğitmen) e-postaları — virgülle ayrılmış ortam değişkeni. */
 export function getAdminEmails(): string[] {
   return (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? "")
     .split(",")

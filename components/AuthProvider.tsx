@@ -33,15 +33,12 @@ interface AuthContextValue {
   ) => Promise<void>;
   signInGoogle: () => Promise<void>;
   signInGuest: (name?: string) => Promise<void>;
-  /** Tek tıkla demo eğitmen (incelemeci) girişi */
   signInDemo: () => Promise<void>;
-  /** Demo girişi yapılandırılmış mı? */
   demoAvailable: boolean;
   signOutUser: () => Promise<void>;
   setLocalName: (name: string) => void;
 }
 
-// İnceleme/demo için hazır eğitmen hesabı (ortam değişkeninden)
 const DEMO_EMAIL = process.env.NEXT_PUBLIC_DEMO_EMAIL;
 const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD;
 
@@ -73,7 +70,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Bulut modu: Firebase auth durumunu dinle
   useEffect(() => {
     if (!cloud) {
-      // Yerel mod: kayıtlı misafiri getir (yoksa null — kullanıcı isim girecek)
       setUser(readLocalUser());
       setLoading(false);
       return;
@@ -114,7 +110,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!fb) throw new Error("Firebase etkin değil");
       const cred = await createUserWithEmailAndPassword(fb.auth, email, password);
       if (name) await updateProfile(cred.user, { displayName: name });
-      // displayName güncellemesini state'e yansıt
       setUser({
         uid: cred.user.uid,
         displayName: name || email,
@@ -157,9 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [cloud]
   );
 
-  // Tek tıkla demo eğitmen girişi (incelemeci/hoca için).
-  // Bulut modunda hazır eğitmen hesabına giriş yapar; yerel modda yerel bir
-  // eğitmen (admin) oturumu açar. Her iki durumda da kullanıcı bir şey yazmaz.
+  // One-click review login: the demo account in cloud mode, a local admin otherwise.
   const signInDemo = useCallback(async () => {
     if (cloud) {
       const fb = getFirebase();

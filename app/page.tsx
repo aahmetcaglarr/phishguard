@@ -22,7 +22,7 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ============ HERO ============ */}
+      {/* Hero */}
       <section className="border-b border-line">
         <div className="container-page grid gap-14 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:py-24">
           {/* Sol: editöryel başlık */}
@@ -80,7 +80,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ 01 · KANALLAR ============ */}
+      {/* Kanallar */}
       <section className="container-page py-16 sm:py-20">
         <SectionHead
           index="01"
@@ -110,7 +110,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ 02 · NASIL ÇALIŞIR ============ */}
+      {/* Nasıl çalışır */}
       <section className="border-y border-line bg-bg-soft/60">
         <div className="container-page py-16 sm:py-20">
           <SectionHead
@@ -153,7 +153,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ 03 · NEDEN ============ */}
+      {/* Neden PhishGuard */}
       <section className="container-page py-16 sm:py-20">
         <SectionHead
           index="03"
@@ -199,7 +199,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ CTA ============ */}
+      {/* CTA */}
       <section className="border-t border-line bg-ink text-bg">
         <div className="container-page py-16 text-center sm:py-20">
           <h2 className="mx-auto max-w-2xl font-display text-3xl font-medium leading-tight sm:text-4xl">
@@ -223,7 +223,6 @@ export default function HomePage() {
   );
 }
 
-/* ---------- Bölüm başlığı (numaralı editöryel) ---------- */
 function SectionHead({
   index,
   title,
@@ -244,7 +243,6 @@ function SectionHead({
   );
 }
 
-/* ---------- İşaretlenmiş "delil" e-posta ---------- */
 function ExhibitEmail() {
   return (
     <figure className="relative">

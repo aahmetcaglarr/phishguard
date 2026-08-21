@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { ShieldIcon, BoltIcon, AlertIcon } from "./Icons";
 
-/** Firebase hata kodlarını okunur Türkçeye çevirir. */
 function friendlyError(e: unknown): string {
   const code =
     typeof e === "object" && e && "code" in e ? String((e as any).code) : "";
@@ -50,7 +49,6 @@ export function AuthPanel({ compact = false }: { compact?: boolean }) {
     }
   };
 
-  // İnceleme/demo için tek tıkla eğitmen girişi (hoca hiçbir şey yazmaz)
   const demoBox = demoAvailable ? (
     <div className="mb-5 rounded-xl border border-accent/30 bg-accent/5 p-4">
       <div className="text-sm font-semibold text-ink">İnceleme / demo</div>
@@ -68,7 +66,6 @@ export function AuthPanel({ compact = false }: { compact?: boolean }) {
     </div>
   ) : null;
 
-  // ---------------- YEREL MOD ----------------
   if (!cloud) {
     return (
       <div className={`card p-6 ${compact ? "" : "mx-auto max-w-md"}`}>
@@ -115,7 +112,6 @@ export function AuthPanel({ compact = false }: { compact?: boolean }) {
     );
   }
 
-  // ---------------- BULUT MODU ----------------
   const submit = () =>
     run(async () => {
       if (mode === "register") await signUpEmail(name, email, password);
